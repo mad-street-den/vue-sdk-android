@@ -1,0 +1,18 @@
+package com.msd.sdk.helper.client
+
+import android.content.Context
+import androidx.annotation.Keep
+import com.msd.sdk.helper.MSDCore
+
+@Keep
+class MSD {
+
+    @Keep
+    companion object{
+        fun getInstance(context: Context,token:String) : MSDClient
+        {
+            return MSDCore(context = context, token = token)
+        }
+    }
+
+}
