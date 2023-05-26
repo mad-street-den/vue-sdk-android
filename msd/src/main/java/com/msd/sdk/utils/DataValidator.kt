@@ -1,6 +1,7 @@
 package com.msd.sdk.utils
 
 import android.content.Context
+import com.msd.sdk.data.model.RecommendationRequest
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
 import org.json.JSONObject
 import kotlin.collections.ArrayList
@@ -38,23 +39,19 @@ object DataValidator {
         }
     }
 
-    fun validateRecommendationSanity(properties: JSONObject, callback: RecommendationCallback) {
-        val missingDataKeys: ArrayList<String> = ArrayList()
-        for (objectKey in properties.keys()) {
-            if (properties.isNull(objectKey))
-                missingDataKeys.add("$objectKey ")
-        }
-        if (missingDataKeys.isNotEmpty()) {
-            var missingString = ""
-            missingDataKeys.forEach { keys ->
-                missingString += "$keys, "
-            }
-            missingString = missingString.substring(0, missingString.length - 2)
+    fun validateRecommendationSanity(
+        properties: RecommendationRequest,
+        callback: RecommendationCallback?
+    ) {
+        if (properties.catalogs == null)
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_RECOMMENDATION,
-                "A recommendation request was made without the following data $missingString"
+                "A request was made without the catalog data"
             )
-        }
+        if (callback == null)
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_RECOMMENDATION,
+                "Callback instance received by the sdk is empty"
+            )
     }
-
 }
