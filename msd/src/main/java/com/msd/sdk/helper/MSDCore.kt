@@ -25,12 +25,12 @@ internal class MSDCore(
     init {
         DataValidator.validateClientData(token, context)
         SDKLogger.isLoggingEnabled = loggingEnabled
-        eventPresenter = EventPresenter(context, token, baseURL)
-        recommendationPresenter = RecommendationPresenter(context, token, baseURL)
+        eventPresenter = EventPresenter(context, token, baseURL,userId)
+        recommendationPresenter = RecommendationPresenter(context, token, baseURL,userId)
     }
 
-    override fun track(eventName: String, properties: JSONObject) {
-        DataValidator.validateEventSanity(eventName, properties)
+    override fun track(eventName: String, properties: JSONObject,pageName:String?) {
+        DataValidator.validateEventSanity(eventName, pageName, properties)
         context?.let { eventPresenter.trackEvent(eventName, properties) }
     }
 
@@ -75,7 +75,7 @@ internal class MSDCore(
         properties: RecommendationRequest,
         callback: RecommendationCallback
     ) {
-        DataValidator.validateRecommendationSanity(properties, callback)
+        DataValidator.validateRecommendationSanity(properties)
         context?.let { recommendationPresenter.getRecommendation(properties, callback) }
     }
 

@@ -20,12 +20,17 @@ object DataValidator {
             )
     }
 
-    fun validateEventSanity(event: String?, properties: JSONObject? = null) {
+    fun validateEventSanity(event: String?,pageName:String?, properties: JSONObject? = null) {
         val missingDataKeys: ArrayList<String> = ArrayList()
         if (event.isNullOrEmpty())
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_EVENT_TRACKING,
                 "An event was recorded without an event name"
+            )
+        if (pageName.isNullOrEmpty())
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_EVENT_TRACKING,
+                "An event was recorded without a page name"
             )
         for (objectKey in properties?.keys()!!) {
             if (properties.isNull(objectKey))
@@ -45,18 +50,12 @@ object DataValidator {
     }
 
     fun validateRecommendationSanity(
-        properties: RecommendationRequest,
-        callback: RecommendationCallback?
+        properties: RecommendationRequest
     ) {
-        if (properties.catalogs == null)
+        if (properties.catalogs.length()==0)
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_RECOMMENDATION,
                 "A request was made without the catalog data"
-            )
-        if (callback == null)
-            SDKLogger.logSDKInfo(
-                LOG_INFO_TAG_RECOMMENDATION,
-                "Callback instance received by the sdk is empty"
             )
     }
 }

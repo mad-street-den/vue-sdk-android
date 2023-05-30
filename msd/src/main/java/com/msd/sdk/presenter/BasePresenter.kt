@@ -6,6 +6,7 @@ import java.util.*
 
 abstract class BasePresenter {
     var baseContext: Context? = null
+    var baseUserId: String? = null
 
   protected fun getMadUUID(): String {
 

@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference
 
 @Keep
 interface MSDClient{
-    fun track(eventName: String, properties: JSONObject)
+    fun track(eventName: String, properties: JSONObject,pageName:String?)
     fun getRecommendationsByPage(pageReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
     fun getRecommendationsByText(textReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
     fun getRecommendationsByStrategy(strategyReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
