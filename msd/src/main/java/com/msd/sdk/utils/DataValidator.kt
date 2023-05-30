@@ -4,15 +4,20 @@ import android.content.Context
 import com.msd.sdk.data.model.RecommendationRequest
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
 import org.json.JSONObject
-import kotlin.collections.ArrayList
 
 object DataValidator {
 
     fun validateClientData(token: String?, context: Context?) {
         if (token.isNullOrEmpty())
-            throw SDKInitException(message = INIT_SDK_TOKEN_EXCEPTION)
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_GENERIC,
+                INIT_SDK_TOKEN_ERROR
+            )
         if (context == null)
-            throw SDKInitException(message = INIT_SDK_CONTEXT_EXCEPTION)
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_GENERIC,
+                INIT_SDK_CONTEXT_ERROR
+            )
     }
 
     fun validateEventSanity(event: String?, properties: JSONObject? = null) {
