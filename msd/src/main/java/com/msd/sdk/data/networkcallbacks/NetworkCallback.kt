@@ -1,8 +1,8 @@
 package com.msd.sdk.data.networkcallbacks
 
-import java.util.*
+import org.json.JSONObject
 
 interface NetworkCallback {
-    fun onResult(classObject: Any)
-    fun onError(classObject: Any)
+   suspend fun onResult(classObject: Any)
+  suspend  fun onError(errorObject: JSONObject)
 }

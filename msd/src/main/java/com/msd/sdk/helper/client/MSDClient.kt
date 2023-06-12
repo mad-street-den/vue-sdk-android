@@ -4,7 +4,6 @@ import androidx.annotation.Keep
 import com.msd.sdk.data.model.RecommendationRequest
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
 @Keep
 interface MSDClient{
@@ -14,5 +13,6 @@ interface MSDClient{
     fun getRecommendationsByStrategy(strategyReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
     fun getRecommendationsByModule(moduleReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
     fun setUserId(userId:String)
+    fun resetUserProfile()
 
 }

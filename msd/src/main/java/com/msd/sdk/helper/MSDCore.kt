@@ -6,7 +6,9 @@ import com.msd.sdk.helper.client.MSDClient
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
 import com.msd.sdk.presenter.EventPresenter
 import com.msd.sdk.presenter.RecommendationPresenter
+import com.msd.sdk.utils.*
 import com.msd.sdk.utils.DataValidator
+import com.msd.sdk.utils.PreferenceHelper
 import com.msd.sdk.utils.SDKLogger
 import org.json.JSONObject
 
@@ -18,20 +20,19 @@ internal class MSDCore(
     loggingEnabled: Boolean
 ) : MSDClient {
 
-    private var userId: String? = null
     private var eventPresenter: EventPresenter
     private var recommendationPresenter: RecommendationPresenter
 
     init {
-        DataValidator.validateClientData(token, context)
+        DataValidator.validateClientData(token, context,baseURL)
         SDKLogger.isLoggingEnabled = loggingEnabled
-        eventPresenter = EventPresenter(context, token, baseURL,userId)
-        recommendationPresenter = RecommendationPresenter(context, token, baseURL,userId)
+        eventPresenter = EventPresenter(context, token, baseURL)
+        recommendationPresenter = RecommendationPresenter(context, token, baseURL)
     }
 
-    override fun track(eventName: String, properties: JSONObject,pageName:String?) {
+    override fun track(eventName: String, properties: JSONObject, pageName: String?) {
         DataValidator.validateEventSanity(eventName, pageName, properties)
-        context?.let { eventPresenter.trackEvent(eventName, properties) }
+        context?.let { eventPresenter.trackEvent(eventName, properties,pageName) }
     }
 
     override fun getRecommendationsByPage(
@@ -39,7 +40,7 @@ internal class MSDCore(
         properties: RecommendationRequest,
         callback: RecommendationCallback
     ) {
-        getRecommendations(properties, callback)
+        getRecommendations(properties, callback, PAGE_REF,pageReference)
     }
 
     override fun getRecommendationsByText(
@@ -47,15 +48,15 @@ internal class MSDCore(
         properties: RecommendationRequest,
         callback: RecommendationCallback
     ) {
-        getRecommendations(properties, callback)
+        getRecommendations(properties, callback, PAGE_REF,textReference)
     }
 
     override fun getRecommendationsByStrategy(
         strategyReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback
+        callback: RecommendationCallback,
     ) {
-        getRecommendations(properties, callback)
+        getRecommendations(properties, callback, STRATEGY_REF,strategyReference)
 
     }
 
@@ -64,19 +65,29 @@ internal class MSDCore(
         properties: RecommendationRequest,
         callback: RecommendationCallback
     ) {
-        getRecommendations(properties, callback)
+        getRecommendations(properties, callback, MODULE_REF,moduleReference)
     }
 
     override fun setUserId(userId: String) {
-        this.userId = userId
+        context?.let {
+            PreferenceHelper.setSharedPreferenceString(it, PreferenceHelper.USER_ID, userId)
+        }
+    }
+
+    override fun resetUserProfile() {
+        context?.let {
+            PreferenceHelper.clearSpecificDataPref(it, PreferenceHelper.USER_ID)
+        }
     }
 
     private fun getRecommendations(
         properties: RecommendationRequest,
-        callback: RecommendationCallback
+        callback: RecommendationCallback,
+        methodKey:String,
+        methodValue:String
     ) {
         DataValidator.validateRecommendationSanity(properties)
-        context?.let { recommendationPresenter.getRecommendation(properties, callback) }
+        context?.let { recommendationPresenter.getRecommendation(properties, callback,methodKey,methodValue) }
     }
 
 }

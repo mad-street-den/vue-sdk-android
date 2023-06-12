@@ -2,13 +2,13 @@ package com.msd.sdk.presenter
 
 import android.content.Context
 import com.msd.sdk.utils.PreferenceHelper
-import java.util.*
+import java.util.UUID
 
 abstract class BasePresenter {
     var baseContext: Context? = null
     var baseUserId: String? = null
 
-  protected fun getMadUUID(): String {
+    protected fun getMadUUID(): String {
 
         baseContext?.let {
             var uuid: String? =
@@ -22,6 +22,17 @@ abstract class BasePresenter {
         }
         return ""
     }
+
+    protected fun getUserID(): String {
+        baseContext?.let {
+            val userId: String =
+                PreferenceHelper.getSharedPreferenceString(it, PreferenceHelper.USER_ID);
+            return userId;
+        }
+        return ""
+    }
+
+    abstract fun checkInternalErrors()
 
 
 }

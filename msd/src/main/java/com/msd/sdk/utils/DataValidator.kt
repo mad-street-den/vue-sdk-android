@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 object DataValidator {
 
-    fun validateClientData(token: String?, context: Context?) {
+    fun validateClientData(token: String?, context: Context?,baseUrl: String?) {
         if (token.isNullOrEmpty())
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_GENERIC,
@@ -17,6 +17,11 @@ object DataValidator {
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_GENERIC,
                 INIT_SDK_CONTEXT_ERROR
+            )
+        if (baseUrl.isNullOrEmpty())
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_GENERIC,
+                INIT_SDK_BASE_URL_ERROR
             )
     }
 
