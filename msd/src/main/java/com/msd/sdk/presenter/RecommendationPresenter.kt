@@ -1,22 +1,27 @@
 package com.msd.sdk.presenter
 
 import android.content.Context
-import android.util.Log
+import android.webkit.URLUtil
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.msd.sdk.data.managers.RecommendationsStateManager
 import com.msd.sdk.data.model.RecommendationRequest
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
-import com.msd.sdk.utils.MEDIUM_VALUE
+import com.msd.sdk.utils.MSDUtils
 import com.msd.sdk.utils.PLATFORM_GENERIC_VALUE
-import com.msd.sdk.utils.PLATFORM_VALUE
+import com.msd.sdk.utils.constants.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class RecommendationPresenter(private var context: Context?, token: String, baseURL: String): BasePresenter() {
+class RecommendationPresenter(context: Context?, var token: String, private var baseURL: String) :
+    BasePresenter() {
     private var recommendationsStateManager: RecommendationsStateManager
     private var injectedProperties: JSONObject? = null
+    private var callbackErrorCode: String = ""
+    private var callbackErrorDescription : String = ""
+    private var properties: RecommendationRequest? = null
 
     init {
         baseContext = context
@@ -29,22 +34,72 @@ class RecommendationPresenter(private var context: Context?, token: String, base
         methodKey: String,
         methodValue: String
     ) {
+        this.properties = properties
+        if(isValidationPassed()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                injectedProperties = injectMandatoryData(methodKey, methodValue, properties)
+                recommendationsStateManager.getRecommendations(injectedProperties!!, token)
+                recommendationsStateManager.recommendationState.collect { it ->
+                    if (it?.recommendationResponse != null) {
+                        it.recommendationResponse?.let { response ->
+                            callback.onRecommendationsFetched(response)
 
+                        }
+                    } else {
+                        it?.errorResponse?.let { it1 -> callback.onError(it1) }
+                    }
+                }
+
+
+            }
+        }
+        else
+        {
+            if(!isNetworkAvailable())
+                callback.onError(JSONObject().put("code", NO_INTERNET).put("message", NO_INTERNET_DESC))
+           else if(!URLUtil.isValidUrl(baseURL))
+                callback.onError(JSONObject().put("code", INVALID_URL).put("message", INVALID_URL_DESC))
+            else
+            callback.onError(JSONObject().put("code", callbackErrorCode).put("message", callbackErrorDescription))
+        }
     }
 
-    private fun injectMandatoryData(methodKey: String, methodValue: String?,properties: RecommendationRequest): JSONObject
-    {
-        val json = Gson().toJson(properties)
-        val jsonObject = JSONObject(json)
-        jsonObject.put("blox_uuid",getMadUUID())
+    private fun injectMandatoryData(
+        methodKey: String,
+        methodValue: String?,
+        properties: RecommendationRequest
+    ): JSONObject {
+        val jsonObject = JSONObject()
+        jsonObject.put("blox_uuid", getMadUUID())
+        jsonObject.put("catalogs",properties.catalogs)
+        jsonObject.put("config",properties.config)
+        jsonObject.put("explain",properties.explain)
+        jsonObject.put("max_bundles",properties.max_bundles)
+        jsonObject.put("max_content",properties.max_content)
+        jsonObject.put("min_bundles",properties.min_bundles)
+        jsonObject.put("min_content",properties.min_content)
+        jsonObject.put("page_num",properties.page_num)
+        jsonObject.put("skip_cache",properties.skip_cache)
+        jsonObject.put("unbundle",properties.unbundle)
+
         jsonObject.put("platform", PLATFORM_GENERIC_VALUE)
-        if(getUserID().isNotEmpty())
-            jsonObject.put("user_id",getUserID())
-        jsonObject.put(methodKey,methodValue)
-        return jsonObject
+        if (getUserID().isNotEmpty())
+            jsonObject.put("user_id", getUserID())
+        jsonObject.put("timestamp",System.currentTimeMillis().toInt())
+        jsonObject.put(methodKey, methodValue)
+        return MSDUtils.eliminateNullFromJson(jsonObject)
     }
 
-    override fun checkInternalErrors() {
-        TODO("Not yet implemented")
+    override fun isValidationPassed(): Boolean {
+        var errorPassed = true
+        if (properties?.catalogs?.length()==0)
+        {
+            callbackErrorCode = DATA_FOR_RECOMMENDATION_EMPTY
+            callbackErrorDescription = DATA_FOR_RECOMMENDATION_EMPTY_DESC
+            errorPassed = false
+
+        }
+        return super.isBaseValidationPassed()  && errorPassed
     }
+
 }

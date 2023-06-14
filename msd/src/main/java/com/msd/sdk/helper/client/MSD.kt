@@ -9,9 +9,9 @@ class MSD {
 
     @Keep
     companion object{
-        fun getInstance(context: Context,token:String,baseURL:String,loggingEnabled:Boolean = false) : MSDClient
+        fun getInstance(context: Context,token:String,baseURL:String) : MSDClient
         {
-            return MSDCore(context = context, token = token, baseURL = baseURL, loggingEnabled = loggingEnabled)
+            return MSDCore(context = context, token = token, baseURL = baseURL)
         }
     }
 

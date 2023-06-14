@@ -14,5 +14,6 @@ interface MSDClient{
     fun getRecommendationsByModule(moduleReference:String,properties: RecommendationRequest, callback: RecommendationCallback)
     fun setUserId(userId:String)
     fun resetUserProfile()
+    fun setLogging(loggingState: Boolean)
 
 }

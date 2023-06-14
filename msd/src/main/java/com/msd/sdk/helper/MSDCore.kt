@@ -10,6 +10,10 @@ import com.msd.sdk.utils.*
 import com.msd.sdk.utils.DataValidator
 import com.msd.sdk.utils.PreferenceHelper
 import com.msd.sdk.utils.SDKLogger
+import com.msd.sdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY
+import com.msd.sdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY_DESC
+import com.msd.sdk.utils.constants.USER_ID_EMPTY
+import com.msd.sdk.utils.constants.USER_ID_EMPTY_DESC
 import org.json.JSONObject
 
 
@@ -17,7 +21,6 @@ internal class MSDCore(
     var token: String,
     var context: Context?,
     var baseURL: String,
-    loggingEnabled: Boolean
 ) : MSDClient {
 
     private var eventPresenter: EventPresenter
@@ -25,7 +28,6 @@ internal class MSDCore(
 
     init {
         DataValidator.validateClientData(token, context,baseURL)
-        SDKLogger.isLoggingEnabled = loggingEnabled
         eventPresenter = EventPresenter(context, token, baseURL)
         recommendationPresenter = RecommendationPresenter(context, token, baseURL)
     }
@@ -69,6 +71,9 @@ internal class MSDCore(
     }
 
     override fun setUserId(userId: String) {
+        if(userId.isEmpty())
+            SDKLogger.logSDKInfo(LOG_INFO_TAG_GENERIC,                "ERROR: Code $USER_ID_EMPTY Message:$USER_ID_EMPTY_DESC"
+            )
         context?.let {
             PreferenceHelper.setSharedPreferenceString(it, PreferenceHelper.USER_ID, userId)
         }
@@ -78,6 +83,10 @@ internal class MSDCore(
         context?.let {
             PreferenceHelper.clearSpecificDataPref(it, PreferenceHelper.USER_ID)
         }
+    }
+
+    override fun setLogging(loggingState: Boolean) {
+        SDKLogger.isLoggingEnabled = loggingState
     }
 
     private fun getRecommendations(
