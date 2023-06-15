@@ -19,6 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.msd.sdk.data.retrofit.RetrofitClient** {*;}
--keep class okhttp3.** {*;}
--keep class retrofit2.** {*;}
+-keep class com.msd.sdk.helper.client** {*;}
+-keep class com.msd.sdk.utils.ConstantsKt** {*;}
+-keep class com.msd.sdk.data.model** {*;}
+
+-keeppackagenames com.msd.sdk**

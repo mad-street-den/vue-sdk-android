@@ -9,6 +9,8 @@ class MSD {
 
     @Keep
     companion object{
+        @Keep
+        @JvmStatic
         fun getInstance(context: Context,token:String,baseURL:String) : MSDClient
         {
             return MSDCore(context = context, token = token, baseURL = baseURL)

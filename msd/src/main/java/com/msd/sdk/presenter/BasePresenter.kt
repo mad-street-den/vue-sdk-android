@@ -45,6 +45,27 @@ abstract class BasePresenter {
     }
 
 
+    abstract fun isValidationPassed() : Boolean
+
+    protected fun isBaseValidationPassed() : Boolean {
+        var errorPassed = true
+        if(!isNetworkAvailable())
+        {
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_EVENT_TRACKING,                "ERROR: Code $NO_INTERNET Message:$NO_INTERNET_DESC"
+            )
+            errorPassed = false
+        }
+        if(!URLUtil.isValidUrl(baseURLHolder))
+        {
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_EVENT_TRACKING,                "ERROR: Code $INVALID_URL Message:$INVALID_URL_DESC"
+            )
+            errorPassed = false
+        }
+        return errorPassed
+    }
+
     protected fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             baseContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -61,25 +82,6 @@ abstract class BasePresenter {
         } else {
             return connectivityManager.activeNetworkInfo?.isConnected ?: false
         }
-    }
-
-    abstract fun isValidationPassed(): Boolean
-
-    protected fun isBaseValidationPassed(): Boolean {
-        var errorPassed = true
-        if (!isNetworkAvailable()) {
-            SDKLogger.logSDKInfo(
-                LOG_INFO_TAG_EVENT_TRACKING, "ERROR: Code $NO_INTERNET Message:$NO_INTERNET_DESC"
-            )
-            errorPassed = false
-        }
-        if (!URLUtil.isValidUrl(baseURLHolder)) {
-            SDKLogger.logSDKInfo(
-                LOG_INFO_TAG_EVENT_TRACKING, "ERROR: Code $INVALID_URL Message:$INVALID_URL_DESC"
-            )
-            errorPassed = false
-        }
-        return errorPassed
     }
 
 }

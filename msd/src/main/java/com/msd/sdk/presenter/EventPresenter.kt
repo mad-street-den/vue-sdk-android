@@ -31,7 +31,7 @@ class EventPresenter(private var context: Context?, var token: String, var baseU
                 eventStateManager.trackEvent(injectedProperties!!, token)
                 eventStateManager.eventState.collect { it ->
                     if (it?.eventResponse != null) {
-                        Log.d(LOG_INFO_TAG_GENERIC, it.eventResponse.toString())
+                        SDKLogger.logSDKInfo(LOG_INFO_TAG_EVENT_TRACKING,"Event recorded Successfully")
                     } else {
                         SDKLogger.logSDKInfo(
                             LOG_INFO_TAG_EVENT_TRACKING,

@@ -1,7 +1,9 @@
 package com.msd.sdk.data.model
 
+import androidx.annotation.Keep
 import org.json.JSONObject
 
+@Keep
 data class RecommendationRequest(
     val catalogs: JSONObject,
     val config: List<Config?>? = null,
@@ -15,18 +17,18 @@ data class RecommendationRequest(
     val unbundle: Boolean? = null
     )
 
-
+@Keep
 data class Config(
     val conditions: List<Condition?>?,
     val params: List<Param?>?
 )
-
+@Keep
 data class Condition(
     val `field`: String?,
     val `operator`: String?,
     val value: List<String?>?
 )
-
+@Keep
 data class Param(
     val `field`: String?,
     val type: String?,

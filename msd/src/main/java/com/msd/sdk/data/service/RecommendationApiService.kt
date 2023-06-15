@@ -1,6 +1,5 @@
 package com.msd.sdk.data.service
 
-import com.msd.sdk.data.model.RecommendationResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
