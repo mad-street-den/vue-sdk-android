@@ -4,7 +4,6 @@ import com.msd.sdk.data.networkcallbacks.NetworkCallback
 import com.msd.sdk.data.retrofit.RetrofitClient
 import com.msd.sdk.data.service.RecommendationApiService
 import com.msd.sdk.utils.DataValidator
-import com.msd.sdk.utils.LOG_INFO_TAG_RECOMMENDATION
 import com.msd.sdk.utils.constants.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -30,7 +29,7 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
             val response = apisService?.getRecommendations(requestBody, token)
             val json = response?.string()
 
-            if(DataValidator.jsonValidator(response?.string()?:"", LOG_INFO_TAG_RECOMMENDATION)) {
+            if(DataValidator.jsonValidator(json ?:"", LOG_INFO_TAG_RECOMMENDATION)) {
 
                 val jsonObject = json?.let { JSONObject(it) }
                 if (jsonObject?.has("errors") != true) {
@@ -46,8 +45,8 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
             }
             else
             {
-                networkCallback.onError(JSONObject().put("code", PROPERTY_VALIDATION).put("message",
-                    PROPERTY_VALIDATION_DESC
+                networkCallback.onError(JSONObject().put("code", UNABLE_TO_DECODE).put("message",
+                    UNABLE_TO_DECODE_DESC
                 ))
             }
         } catch (e: HttpException) {
@@ -55,6 +54,13 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
                 networkCallback.onError(JSONObject().put("code", TIME_OUT).put("message",
                     TIME_OUT_DESC
                 ))
+            else if(e.code() in 500..599)
+                networkCallback.onError(
+                    JSONObject().put("code", SERVER_UNAVAILABLE).put(
+                        "message",
+                        SERVER_UNAVAILABLE_DESC
+                    )
+                )
             else
                 networkCallback.onError( JSONObject(e.response()?.errorBody()?.string()?:""))
 

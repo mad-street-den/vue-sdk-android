@@ -28,7 +28,7 @@ object DataValidator {
             )
     }
 
-    fun validateEventSanity(event: String?,pageName:String?, properties: JSONObject? = null) {
+    fun validateEventSanity(event: String?, properties: JSONObject? = null) {
         val missingDataKeys: ArrayList<String> = ArrayList()
         if (event.isNullOrEmpty())
             SDKLogger.logSDKInfo(
@@ -77,7 +77,7 @@ object DataValidator {
             try {
                 JSONArray(jsonString)
             } catch (ex1: JSONException) {
-                SDKLogger.logSDKInfo(hostTag,                "ERROR: Code $PROPERTY_VALIDATION Message:$PROPERTY_VALIDATION_DESC"
+                SDKLogger.logSDKInfo(hostTag,                "ERROR: Code $UNABLE_TO_DECODE Message:$UNABLE_TO_DECODE_DESC"
                 )
                 return false
             }

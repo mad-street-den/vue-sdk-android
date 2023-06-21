@@ -4,12 +4,9 @@ import com.msd.sdk.data.networkcallbacks.NetworkCallback
 import com.msd.sdk.data.retrofit.RetrofitClient
 import com.msd.sdk.data.service.EventApiService
 import com.msd.sdk.utils.DataValidator
-import com.msd.sdk.utils.LOG_INFO_TAG_EVENT_TRACKING
-import com.msd.sdk.utils.constants.TIME_OUT
-import com.msd.sdk.utils.constants.TIME_OUT_DESC
-import com.msd.sdk.utils.constants.UNKNOWN_ERROR
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.msd.sdk.utils.constants.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.UnknownHostException
@@ -35,7 +32,7 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository {
             val response = apisService?.trackEvent(requestBody, token)
             val json = response?.string()
             if (DataValidator.jsonValidator(
-                    response?.string() ?: "",
+                    json ?: "",
                     LOG_INFO_TAG_EVENT_TRACKING
                 )
             ) {
@@ -57,6 +54,13 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository {
                     JSONObject().put("code", TIME_OUT).put(
                         "message",
                         TIME_OUT_DESC
+                    )
+                )
+            else if(e.code() in 500..599)
+                networkCallback.onError(
+                    JSONObject().put("code", SERVER_UNAVAILABLE).put(
+                        "message",
+                        SERVER_UNAVAILABLE_DESC
                     )
                 )
             else

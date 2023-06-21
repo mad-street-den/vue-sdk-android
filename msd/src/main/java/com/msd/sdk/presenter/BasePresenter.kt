@@ -5,14 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.webkit.URLUtil
-import com.msd.sdk.utils.LOG_INFO_TAG_EVENT_TRACKING
 import com.msd.sdk.utils.PreferenceHelper
-import java.util.UUID
 import com.msd.sdk.utils.SDKLogger
-import com.msd.sdk.utils.constants.INVALID_URL
-import com.msd.sdk.utils.constants.INVALID_URL_DESC
-import com.msd.sdk.utils.constants.NO_INTERNET
-import com.msd.sdk.utils.constants.NO_INTERNET_DESC
+import com.msd.sdk.utils.constants.*
 import java.util.*
 
 
@@ -38,32 +33,10 @@ abstract class BasePresenter {
     protected fun getUserID(): String {
         baseContext?.let {
             val userId: String =
-                PreferenceHelper.getSharedPreferenceString(it, PreferenceHelper.USER_ID);
-            return userId;
+                PreferenceHelper.getSharedPreferenceString(it, PreferenceHelper.USER_ID)
+            return userId
         }
         return ""
-    }
-
-
-    abstract fun isValidationPassed() : Boolean
-
-    protected fun isBaseValidationPassed() : Boolean {
-        var errorPassed = true
-        if(!isNetworkAvailable())
-        {
-            SDKLogger.logSDKInfo(
-                LOG_INFO_TAG_EVENT_TRACKING,                "ERROR: Code $NO_INTERNET Message:$NO_INTERNET_DESC"
-            )
-            errorPassed = false
-        }
-        if(!URLUtil.isValidUrl(baseURLHolder))
-        {
-            SDKLogger.logSDKInfo(
-                LOG_INFO_TAG_EVENT_TRACKING,                "ERROR: Code $INVALID_URL Message:$INVALID_URL_DESC"
-            )
-            errorPassed = false
-        }
-        return errorPassed
     }
 
     protected fun isNetworkAvailable(): Boolean {
@@ -82,6 +55,25 @@ abstract class BasePresenter {
         } else {
             return connectivityManager.activeNetworkInfo?.isConnected ?: false
         }
+    }
+
+    abstract fun isValidationPassed(): Boolean
+
+    protected fun isBaseValidationPassed(): Boolean {
+        var errorPassed = true
+        if (!isNetworkAvailable()) {
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_EVENT_TRACKING, "ERROR: Code $NO_INTERNET Message:$NO_INTERNET_DESC"
+            )
+            errorPassed = false
+        }
+        if (!URLUtil.isValidUrl(baseURLHolder)) {
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_EVENT_TRACKING, "ERROR: Code $INVALID_URL Message:$INVALID_URL_DESC"
+            )
+            errorPassed = false
+        }
+        return errorPassed
     }
 
 }

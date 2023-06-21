@@ -19,18 +19,18 @@ data class RecommendationRequest(
 
 @Keep
 data class Config(
-    val conditions: List<Condition?>?,
-    val params: List<Param?>?
+    val conditions: List<Condition?>?= null,
+    val params: List<Param?>?=null
 )
 @Keep
 data class Condition(
-    val `field`: String?,
-    val `operator`: String?,
-    val value: List<String?>?
+    val `field`: String?=null,
+    val `operator`: String?=null,
+    val value: List<String?>?=null
 )
 @Keep
 data class Param(
-    val `field`: String?,
-    val type: String?,
-    val value: List<String?>?
+    val `field`: String?=null,
+    val type: String?=null,
+    val value: List<String?>?=null
 )

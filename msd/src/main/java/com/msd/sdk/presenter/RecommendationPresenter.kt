@@ -2,13 +2,10 @@ package com.msd.sdk.presenter
 
 import android.content.Context
 import android.webkit.URLUtil
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.msd.sdk.data.managers.RecommendationsStateManager
 import com.msd.sdk.data.model.RecommendationRequest
 import com.msd.sdk.helper.client.callbacks.RecommendationCallback
 import com.msd.sdk.utils.MSDUtils
-import com.msd.sdk.utils.PLATFORM_GENERIC_VALUE
 import com.msd.sdk.utils.constants.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +22,7 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
 
     init {
         baseContext = context
+        baseURLHolder = baseURL
         recommendationsStateManager = RecommendationsStateManager(baseURL)
     }
 
