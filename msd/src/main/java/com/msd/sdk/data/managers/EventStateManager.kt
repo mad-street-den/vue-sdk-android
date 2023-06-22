@@ -12,7 +12,7 @@ class EventStateManager(var baseURL: String) {
     var eventState: MutableStateFlow<EventState?> = MutableStateFlow(null)
 
 
-    suspend fun trackEvent( properties: JSONObject,token:String) {
+    suspend fun trackEvent( properties: JSONObject,token:String,correlationId:String?) {
         service.trackEvent(properties,object : NetworkCallback{
             override suspend fun onResult(classObject: Any) {
                 val eventState = EventState(eventResponse = classObject as JSONObject, errorResponse = null)
@@ -24,7 +24,7 @@ class EventStateManager(var baseURL: String) {
                 this@EventStateManager.eventState.emit(eventState)
             }
 
-        },token)
+        },token,correlationId)
     }
 
 }

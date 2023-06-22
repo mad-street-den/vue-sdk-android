@@ -22,12 +22,12 @@ class EventPresenter(private var context: Context?, var token: String, var baseU
         eventStateManager = EventStateManager(baseURL)
     }
 
-    fun trackEvent(eventName: String, properties: JSONObject) {
+    fun trackEvent(eventName: String, properties: JSONObject, correlationId: String?) {
         this.properties = properties
         if (isValidationPassed()) {
             CoroutineScope(Dispatchers.IO).launch {
                 injectedProperties = injectMandatoryData(eventName, properties)
-                eventStateManager.trackEvent(injectedProperties!!, token)
+                eventStateManager.trackEvent(injectedProperties!!, token,correlationId)
                 eventStateManager.eventState.collect { it ->
                     if (it?.eventResponse != null) {
                         SDKLogger.logSDKInfo(LOG_INFO_TAG_EVENT_TRACKING,EVENT_SUCCESS_MESSAGE)

@@ -11,7 +11,7 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class RecommendationRepositoryImplementation( baseURL: String) : RecommendationRepository {
+class RecommendationRepositoryImplementation( baseURL: String) : RecommendationRepository,BaseRepository() {
     private var apisService: RecommendationApiService? = null
 
     init {
@@ -20,13 +20,19 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
         )
     }
 
-    override suspend fun getRecommendation(request: JSONObject, networkCallback: NetworkCallback,token:String) {
+    override suspend fun getRecommendation(
+        request: JSONObject,
+        networkCallback: NetworkCallback,
+        token: String,
+        correlationId: String?
+    ) {
+        this.correlationId = correlationId
 
         try {
 
             val requestBody =
                 request.toString().toRequestBody("application/json".toMediaTypeOrNull())
-            val response = apisService?.getRecommendations(requestBody, token)
+            val response = apisService?.getRecommendations(requestBody, token,headers)
             val json = response?.string()
 
             if(DataValidator.jsonValidator(json ?:"", LOG_INFO_TAG_RECOMMENDATION)) {

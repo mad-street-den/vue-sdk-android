@@ -11,7 +11,7 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class EventRepositoryImplementation(var baseURL: String) : EventRepository {
+class EventRepositoryImplementation(var baseURL: String) : EventRepository, BaseRepository() {
     private var apisService: EventApiService? = null
 
     init {
@@ -22,14 +22,13 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository {
 
     override suspend fun trackEvent(
         properties: JSONObject,
-        networkCallback: NetworkCallback, token: String
+        networkCallback: NetworkCallback, token: String, correlationId: String?
     ) {
-
+     this.correlationId = correlationId
         try {
-
             val requestBody =
                 properties.toString().toRequestBody("application/json".toMediaTypeOrNull())
-            val response = apisService?.trackEvent(requestBody, token)
+            val response = apisService?.trackEvent(requestBody, token,headers)
             val json = response?.string()
             if (DataValidator.jsonValidator(
                     json ?: "",

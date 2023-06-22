@@ -12,7 +12,7 @@ class RecommendationsStateManager(baseURL: String) {
     var recommendationState: MutableStateFlow<RecommendationState?> = MutableStateFlow(null)
 
 
-    suspend fun getRecommendations(properties: JSONObject, token:String) {
+    suspend fun getRecommendations(properties: JSONObject, token:String,correlationId:String?) {
         service.getRecommendation(properties,object : NetworkCallback {
             override suspend fun onResult(classObject: Any) {
                var classObjectJson = classObject as JSONObject
@@ -26,7 +26,7 @@ class RecommendationsStateManager(baseURL: String) {
                 this@RecommendationsStateManager.recommendationState.emit(eventState)
             }
 
-        },token)
+        },token,correlationId)
     }
 
 }

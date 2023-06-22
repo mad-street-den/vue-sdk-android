@@ -30,13 +30,13 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         properties: RecommendationRequest,
         callback: RecommendationCallback,
         methodKey: String,
-        methodValue: String
+        methodValue: String,correlationId:String?
     ) {
         this.properties = properties
         if(isValidationPassed()) {
             CoroutineScope(Dispatchers.IO).launch {
                 injectedProperties = injectMandatoryData(methodKey, methodValue, properties)
-                recommendationsStateManager.getRecommendations(injectedProperties!!, token)
+                recommendationsStateManager.getRecommendations(injectedProperties!!, token,correlationId)
                 recommendationsStateManager.recommendationState.collect { it ->
                     if (it?.recommendationResponse != null) {
                         it.recommendationResponse?.let { response ->

@@ -7,7 +7,7 @@ import com.msd.sdk.utils.constants.*
 import org.json.JSONObject
 import retrofit2.HttpException
 
-class DiscoverEventsRepositoryImplementation(baseUrl: String): DiscoverEventsRepository {
+class DiscoverEventsRepositoryImplementation(baseUrl: String): DiscoverEventsRepository,BaseRepository() {
     private var apisService: DiscoverEventsApiService? = null
 
     init {

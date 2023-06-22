@@ -50,45 +50,46 @@ internal class MSDCore(
         fetchDiscoverEvents()
     }
 
-    override fun track(eventName: String, properties: JSONObject) {
+    override fun track(eventName: String, properties: JSONObject,correlationId:String?) {
         if(!DiscoverEventUtils.getDiscoveryUtilInstance().fetchSuccess){
             fetchDiscoverEvents()
         }
         DataValidator.validateEventSanity(eventName, properties)
-        context?.let { eventPresenter.trackEvent(eventName, properties) }
+        context?.let { eventPresenter.trackEvent(eventName, properties,correlationId) }
     }
 
     override fun getRecommendationsByPage(
         pageReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback
+        callback: RecommendationCallback,correlationId:String?
     ) {
-        getRecommendations(properties, callback, PAGE_REF, pageReference)
+        getRecommendations(properties, callback, PAGE_REF, pageReference,correlationId)
     }
 
     override fun getRecommendationsByText(
         textReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback
+        callback: RecommendationCallback,correlationId:String?
     ) {
-        getRecommendations(properties, callback, PAGE_REF, textReference)
+        getRecommendations(properties, callback, PAGE_REF, textReference,correlationId)
     }
 
     override fun getRecommendationsByStrategy(
         strategyReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback,
+        callback: RecommendationCallback,correlationId:String?
     ) {
-        getRecommendations(properties, callback, STRATEGY_REF, strategyReference)
+        getRecommendations(properties, callback, STRATEGY_REF, strategyReference,correlationId)
 
     }
 
     override fun getRecommendationsByModule(
         moduleReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback
+        callback: RecommendationCallback,
+        correlationId: String?
     ) {
-        getRecommendations(properties, callback, MODULE_REF, moduleReference)
+        getRecommendations(properties, callback, MODULE_REF, moduleReference,correlationId)
     }
 
     override fun discoverEvents(callback: DiscoverEventsCallback) {
@@ -124,7 +125,7 @@ internal class MSDCore(
         properties: RecommendationRequest,
         callback: RecommendationCallback,
         methodKey: String,
-        methodValue: String
+        methodValue: String,correlationId:String?
     ) {
         DataValidator.validateRecommendationSanity(properties)
         context?.let {
@@ -132,7 +133,7 @@ internal class MSDCore(
                 properties,
                 callback,
                 methodKey,
-                methodValue
+                methodValue,correlationId
             )
         }
     }
