@@ -9,6 +9,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class RecommendationRepositoryImplementation( baseURL: String) : RecommendationRepository,BaseRepository() {
@@ -71,10 +72,16 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
                 networkCallback.onError( JSONObject(e.response()?.errorBody()?.string()?:""))
 
         }
-        catch (e: UnknownHostException)
+        catch (e: SocketTimeoutException)
         {
-            networkCallback.onError( JSONObject().put("code",UNKNOWN_ERROR).put("message",e.message))
-
+            networkCallback.onError(
+                JSONObject().put("code", TIME_OUT).put("message",
+                    TIME_OUT_DESC
+                ))
+        }
+        catch(e: Exception)
+        {
+            networkCallback.onError( JSONObject().put("code", UNKNOWN_ERROR).put("message",e.message))
         }
 
     }

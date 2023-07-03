@@ -52,8 +52,9 @@ class EventPresenter(private var context: Context?, var token: String, var baseU
             properties.put(it?.get("blox_uuid") ?: "blox_uuid", getMadUUID())
             properties.put(it?.get("medium") ?: "medium", MEDIUM_VALUE)
             properties.put(it?.get("platform") ?: "platform", PLATFORM_VALUE)
+            properties.put(it?.get("referrer")?:"referrer", PLATFORM_VALUE)
             properties.put(it?.get("url") ?: "url", context?.applicationContext?.packageName)
-            properties.put(it?.get("timestamp") ?: "timestamp", System.currentTimeMillis().toInt())
+            properties.put(it?.get("timestamp") ?: "timestamp", System.currentTimeMillis())
             if (getUserID().isNotEmpty())
                 properties.put(it?.get("user_id") ?: "user_id", getUserID())
         }

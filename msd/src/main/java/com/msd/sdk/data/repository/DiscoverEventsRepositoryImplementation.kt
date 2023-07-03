@@ -6,6 +6,7 @@ import com.msd.sdk.data.service.DiscoverEventsApiService
 import com.msd.sdk.utils.constants.*
 import org.json.JSONObject
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 class DiscoverEventsRepositoryImplementation(baseUrl: String): DiscoverEventsRepository,BaseRepository() {
     private var apisService: DiscoverEventsApiService? = null
@@ -34,6 +35,13 @@ class DiscoverEventsRepositoryImplementation(baseUrl: String): DiscoverEventsRep
                 )
             else
                 networkCallback.onError( JSONObject(e.response()?.errorBody()?.string()?:""))
+        }
+        catch (e:SocketTimeoutException)
+        {
+            networkCallback.onError(
+                JSONObject().put("code", TIME_OUT).put("message",
+                    TIME_OUT_DESC
+                ))
         }
         catch(e: Exception)
         {
