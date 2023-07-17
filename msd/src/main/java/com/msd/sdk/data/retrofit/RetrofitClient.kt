@@ -19,9 +19,7 @@ class RetrofitClient {
                 val okHttpClientOptions = OkHttpClient.Builder()
                     .readTimeout(30, TimeUnit.SECONDS)
                     .connectTimeout(30, TimeUnit.SECONDS)
-
-                if (SDKLogger.isLoggingEnabled)
-                    okHttpClientOptions.addInterceptor(LoggingInterceptor())
+                okHttpClientOptions.addInterceptor(LoggingInterceptor())
 
                 retrofit = Retrofit.Builder().baseUrl(
                     absoluteBaseUrl
