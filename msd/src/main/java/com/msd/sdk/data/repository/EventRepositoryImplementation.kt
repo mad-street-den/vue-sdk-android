@@ -10,9 +10,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
-class EventRepositoryImplementation(var baseURL: String) : EventRepository, BaseRepository() {
+class EventRepositoryImplementation(baseURL: String) : EventRepository, BaseRepository() {
     private var apisService: EventApiService? = null
 
     init {
@@ -25,11 +24,15 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository, Base
         properties: JSONObject,
         networkCallback: NetworkCallback, token: String, correlationId: String?
     ) {
-     this.correlationId = correlationId
+
+        this.correlationId = correlationId
+
+        setHeaders()
+
         try {
             val requestBody =
                 properties.toString().toRequestBody("application/json".toMediaTypeOrNull())
-            val response = apisService?.trackEvent(requestBody, token,headers)
+            val response = apisService?.trackEvent(requestBody, token, headers!!)
             val json = response?.string()
             if (DataValidator.jsonValidator(
                     json ?: "",
@@ -56,7 +59,7 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository, Base
                         TIME_OUT_DESC
                     )
                 )
-            else if(e.code() in 500..599)
+            else if (e.code() in 500..599)
                 networkCallback.onError(
                     JSONObject().put("code", SERVER_UNAVAILABLE).put(
                         "message",
@@ -65,16 +68,17 @@ class EventRepositoryImplementation(var baseURL: String) : EventRepository, Base
                 )
             else
                 networkCallback.onError(JSONObject(e.response()?.errorBody()?.string() ?: ""))
-        } catch (e: SocketTimeoutException)
-        {
+        } catch (e: SocketTimeoutException) {
             networkCallback.onError(
-                JSONObject().put("code", TIME_OUT).put("message",
+                JSONObject().put("code", TIME_OUT).put(
+                    "message",
                     TIME_OUT_DESC
-                ))
-        }
-        catch(e: Exception)
-        {
-            networkCallback.onError( JSONObject().put("code", UNKNOWN_ERROR).put("message",e.message))
+                )
+            )
+        } catch (e: Exception) {
+            networkCallback.onError(
+                JSONObject().put("code", UNKNOWN_ERROR).put("message", e.message)
+            )
         }
 
 

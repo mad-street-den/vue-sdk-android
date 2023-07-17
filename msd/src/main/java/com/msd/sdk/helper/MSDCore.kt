@@ -66,14 +66,6 @@ internal class MSDCore(
         getRecommendations(properties, callback, PAGE_REF, pageReference,correlationId)
     }
 
-    override fun getRecommendationsByText(
-        textReference: String,
-        properties: RecommendationRequest,
-        callback: RecommendationCallback,correlationId:String?
-    ) {
-        getRecommendations(properties, callback, PAGE_REF, textReference,correlationId)
-    }
-
     override fun getRecommendationsByStrategy(
         strategyReference: String,
         properties: RecommendationRequest,

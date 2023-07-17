@@ -10,7 +10,6 @@ import org.json.JSONObject
 interface MSDClient{
     fun track(eventName: String, properties: JSONObject,correlationId:String? = null)
     fun getRecommendationsByPage(pageReference:String,properties: RecommendationRequest, callback: RecommendationCallback,correlationId:String? = null)
-    fun getRecommendationsByText(textReference:String,properties: RecommendationRequest, callback: RecommendationCallback,correlationId:String? = null)
     fun getRecommendationsByStrategy(strategyReference:String,properties: RecommendationRequest, callback: RecommendationCallback,correlationId:String? = null)
     fun getRecommendationsByModule(moduleReference:String,properties: RecommendationRequest, callback: RecommendationCallback,correlationId:String? = null)
     fun discoverEvents(callback: DiscoverEventsCallback)

@@ -10,9 +10,9 @@ import com.msd.sdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY
 import com.msd.sdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY_DESC
 import com.msd.sdk.utils.constants.INVALID_URL
 import com.msd.sdk.utils.constants.INVALID_URL_DESC
+import com.msd.sdk.utils.constants.MEDIUM_VALUE
 import com.msd.sdk.utils.constants.NO_INTERNET
 import com.msd.sdk.utils.constants.NO_INTERNET_DESC
-import com.msd.sdk.utils.constants.PLATFORM_GENERIC_VALUE
 import com.msd.sdk.utils.constants.PLATFORM_VALUE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ import org.json.JSONObject
 
 class RecommendationPresenter(context: Context?, var token: String, private var baseURL: String) :
     BasePresenter() {
-    private var recommendationsStateManager: RecommendationsStateManager
+    private var recommendationsStateManager: RecommendationsStateManager? = null
     private var injectedProperties: JSONObject? = null
     private var callbackErrorCode: String = ""
     private var callbackErrorDescription: String = ""
@@ -30,7 +30,8 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
     init {
         baseContext = context
         baseURLHolder = baseURL
-        recommendationsStateManager = RecommendationsStateManager(baseURL)
+        if (isBaseValidationPassed())
+            recommendationsStateManager = RecommendationsStateManager(baseURL)
     }
 
     fun getRecommendation(
@@ -43,12 +44,12 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         if (isValidationPassed()) {
             CoroutineScope(Dispatchers.IO).launch {
                 injectedProperties = injectMandatoryData(methodKey, methodValue, properties)
-                recommendationsStateManager.getRecommendations(
+                recommendationsStateManager?.getRecommendations(
                     injectedProperties!!,
                     token,
                     correlationId
                 )
-                recommendationsStateManager.recommendationState.collect { it ->
+                recommendationsStateManager?.recommendationState?.collect {
                     if (it?.recommendationResponse != null) {
                         it.recommendationResponse?.let { response ->
                             callback.onRecommendationsFetched(response)
@@ -97,11 +98,10 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         jsonObject.put("skip_cache", properties.skip_cache)
         jsonObject.put("unbundle", properties.unbundle)
         jsonObject.put("url", baseContext?.applicationContext?.packageName)
-        jsonObject.put("medium", PLATFORM_VALUE)
-        jsonObject.put("platform", PLATFORM_GENERIC_VALUE)
+        jsonObject.put("medium", MEDIUM_VALUE)
+        jsonObject.put("platform", PLATFORM_VALUE)
         if (getUserID().isNotEmpty())
             jsonObject.put("user_id", getUserID())
-        jsonObject.put("timestamp", System.currentTimeMillis())
         jsonObject.put(methodKey, methodValue)
         return MSDUtils.eliminateNullFromJson(jsonObject)
     }

@@ -11,7 +11,7 @@ import org.json.JSONObject
 object DataValidator {
 
     fun validateClientData(token: String?, context: Context?,baseUrl: String?) {
-        if (token.isNullOrEmpty())
+        if (token.isNullOrBlank())
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_GENERIC,
                 "ERROR: Code $TOKEN_EMPTY Message:$TOKEN_EMPTY_DESC"
@@ -21,7 +21,7 @@ object DataValidator {
                 LOG_INFO_TAG_GENERIC,
                 INIT_SDK_CONTEXT_ERROR
             )
-        if (baseUrl.isNullOrEmpty())
+        if (baseUrl.isNullOrBlank())
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_GENERIC,
                 "ERROR: Code $INIT_SDK_BASE_ERROR Message:$INIT_SDK_BASE_ERROR"
@@ -30,7 +30,7 @@ object DataValidator {
 
     fun validateEventSanity(event: String?, properties: JSONObject? = null) {
         val missingDataKeys: ArrayList<String> = ArrayList()
-        if (event.isNullOrEmpty())
+        if (event.isNullOrBlank())
             SDKLogger.logSDKInfo(
                 LOG_INFO_TAG_EVENT_TRACKING,
                 "ERROR: Code $EVENT_NAME_EMPTY Message:$EVENT_NAME_EMPTY_DESC"

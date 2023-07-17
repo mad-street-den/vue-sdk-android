@@ -10,7 +10,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 class RecommendationRepositoryImplementation( baseURL: String) : RecommendationRepository,BaseRepository() {
     private var apisService: RecommendationApiService? = null
@@ -28,12 +27,13 @@ class RecommendationRepositoryImplementation( baseURL: String) : RecommendationR
         correlationId: String?
     ) {
         this.correlationId = correlationId
+        setHeaders()
 
         try {
 
             val requestBody =
                 request.toString().toRequestBody("application/json".toMediaTypeOrNull())
-            val response = apisService?.getRecommendations(requestBody, token,headers)
+            val response = apisService?.getRecommendations(requestBody, token,headers!!)
             val json = response?.string()
 
             if(DataValidator.jsonValidator(json ?:"", LOG_INFO_TAG_RECOMMENDATION)) {

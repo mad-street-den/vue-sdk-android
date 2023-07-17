@@ -7,7 +7,7 @@ import com.msd.sdk.data.state.EventState
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
 
-class EventStateManager(var baseURL: String) {
+class EventStateManager( baseURL: String) {
     private var service: EventRepository = EventRepositoryImplementation(baseURL)
     var eventState: MutableStateFlow<EventState?> = MutableStateFlow(null)
 

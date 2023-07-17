@@ -1,6 +1,7 @@
 package com.msd.sdk.data.retrofit
 
 
+import com.msd.sdk.utils.SDKLogger
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,20 +11,23 @@ class RetrofitClient {
 
     companion object {
         private var retrofit: Retrofit? = null
-        fun getRetrofitInstance(baseUrl:String): Retrofit? {
+        fun getRetrofitInstance(baseUrl: String): Retrofit? {
             if (retrofit == null && baseUrl.isNotEmpty()) {
                 var absoluteBaseUrl = baseUrl
-                if(absoluteBaseUrl[baseUrl.length-1] !='/')
+                if (absoluteBaseUrl[baseUrl.length - 1] != '/')
                     absoluteBaseUrl = "$baseUrl/"
-                val okHttpClient = OkHttpClient.Builder()
+                val okHttpClientOptions = OkHttpClient.Builder()
                     .readTimeout(30, TimeUnit.SECONDS)
                     .connectTimeout(30, TimeUnit.SECONDS)
-                    .build()
 
-                retrofit = Retrofit.Builder().baseUrl(absoluteBaseUrl
+                if (SDKLogger.isLoggingEnabled)
+                    okHttpClientOptions.addInterceptor(LoggingInterceptor())
+
+                retrofit = Retrofit.Builder().baseUrl(
+                    absoluteBaseUrl
                 )
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(okHttpClient)
+                    .client(okHttpClientOptions.build())
                     .build()
             }
             return retrofit
