@@ -22,7 +22,7 @@ class LoggingInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         val responseLog =
-            " \n Response Code: ${response.code} \n" +
+            " \nResponse Code: ${response.code} \n" +
                     "Response Headers: ${response.headers} \n" +
                     "Response Body: ${response.body?.let { responseBodyToString(it) }}"
 
