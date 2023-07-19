@@ -13,17 +13,17 @@ class LoggingInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestLog =
-            "Request URL: ${request.url} " +
-                    "Request Method: ${request.method} " +
-                    "Request Headers: ${request.headers} " +
-                    "Request Body: ${request.body?.let { requestBodyToString(it) }}"
+            "Request URL: ${request.url} \n" +
+                    "Request Method: ${request.method} \n" +
+                    "Request Headers: ${request.headers} \n" +
+                    "Request Body: ${request.body?.let { requestBodyToString(it) }} \n"
 
 
         val response = chain.proceed(request)
 
         val responseLog =
-            "Response Code: ${response.code}" +
-                    "Response Headers: ${response.headers}" +
+            " \n Response Code: ${response.code} \n" +
+                    "Response Headers: ${response.headers} \n" +
                     "Response Body: ${response.body?.let { responseBodyToString(it) }}"
 
         SDKLogger.logSDKInfo(LOG_INFO_TAG_GENERIC, requestLog + responseLog)
