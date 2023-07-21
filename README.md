@@ -48,7 +48,7 @@ allprojects {
 3. Add the dependency
 ```kotlin
 dependencies {
-    implementation 'com.github.mad.street.den:aar-publishing-msd:1.0.0'
+    implementation 'com.github.mad.street.den:vue.sdk.android:1.0.0'
 }
 ```
 
@@ -57,12 +57,12 @@ dependencies {
 Import and initialize `VueSDK` in `MainActivity`, passing the context, token and baseUrl
 
 ```kotlin
-import com.msd.vuesdk.helper.client.MSD
+import com.msd.vuesdk.helper.client.VueSDK
 
 class MainActivity {
     ...
-    val msdClient = MSD.getInstance(
-        context = LocalContext.current,
+    val vueSDKClient = VueSDK.getInstance(
+        context = applicationContext,
         token = "YOUR_TOKEN",
         baseUrl = "GIVEN_MSD_BASE_URL"
     )
@@ -76,7 +76,7 @@ To ensure accurate and comprehensive event tracking, it is recommended to call t
 
 
 ```kotlin
-msdClient.discoverEvents(object : DiscoverEventsCallback {
+vueSDKClient.discoverEvents(object : DiscoverEventsCallback {
     override fun onDiscoverEventsFetched(response: DiscoverEventsResponse) {
         // Save the response if needed
     }
@@ -93,7 +93,7 @@ To track custom events using our SDK, you can utilize the `track` function. This
 
 Here's an example of how to use the track function:
 ```kotlin
-msdClient.track(
+vueSDKClient.track(
     eventName = "Event_Name",
     properties = <JSON_Object>,
     correlationID = "UNIQUE_CORRELATION_ID"
@@ -123,7 +123,7 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 
 ### Get Recommendations by Page
 ```kotlin
- msdClient.getRecommendationsByPage(
+ vueSDKClient.getRecommendationsByPage(
     pageReference = "YOUR_PAGE_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
@@ -144,7 +144,7 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 ### Get Recommendations by Module
 
 ```kotlin
- msdClient.getRecommendationsByModule(
+ vueSDKClient.getRecommendationsByModule(
     moduleReference = "YOUR_MODULE_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
@@ -164,7 +164,7 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 
 ### Get Recommendations by Strategy
 ```kotlin
-msdClient.getRecommendationsByStrategy(
+vueSDKClient.getRecommendationsByStrategy(
     strategyReference = "YOUR_STRATEGY_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
@@ -204,7 +204,7 @@ The SDK automatically includes several properties when tracking events, eliminat
 The `setUser` function in the SDK allows you to associate a user ID with subsequent API calls after the user has logged in. This user ID is used to track user-specific events and behaviors, providing personalized experiences and accurate analytics.
 
 ```kotlin
- msdClient.setUser(userId = "YOUR_USER_ID")
+ vueSDKClient.setUser(userId = "YOUR_USER_ID")
 ```
 
 ## Reset User
@@ -212,7 +212,7 @@ The `setUser` function in the SDK allows you to associate a user ID with subsequ
 The `resetUser` function in the SDK allows you to clear the user information, we recommend you to call this function on user logout/switch. This ensures that any user-specific data and tracking are cleared and no longer associated with the user.
 
 ```kotlin
- msdClient.resetUser()
+ vueSDKClient.resetUser()
 ```
 
 ## VueSDK debugging and logging
@@ -222,29 +222,29 @@ The SDK provides internal logging capabilities for debugging purposes. By defaul
 To enable internal logging, pass `true` to the function `setLogging`:
 
 ```kotlin
-msdClient.setLogging(loggingState = true)
+vueSDKClient.setLogging(loggingState = true)
 ```
 
 ## Complete Code Example
 Here's a runnable code example that covers everything in this quick start guide.
 ```kotlin
-import com.msd.vuesdk.helper.client.MSD
+import com.msd.vuesdk.helper.client.VueSDK
 
 class MainActivity {
     ...
     
-    let msdClient =  MSD.getInstance(
-        context = LocalContext.current,
+    val vueSDKClient =  VueSDK.getInstance(
+        context = applicationContext,
         token = "YOUR_TOKEN",
         baseUrl = "https://api.msd.com"
     );
 
-    msdClient.track(
+    vueSDKClient.track(
         eventName = "YOUR_CUSTOM_EVENT_NAME",
         properties = JSONObject()
     );
 
-    msdClient.getRecommendationsByPage(
+    vueSDKClient.getRecommendationsByPage(
         pageReference = "YOUR_PAGE_NAME",
         properties = RecommendationRequest(
             catalogs = JSONObject()
