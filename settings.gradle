@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "vue-sdk-android"
 include ':vue-sdk-android'
+include ':vue-sample-app'

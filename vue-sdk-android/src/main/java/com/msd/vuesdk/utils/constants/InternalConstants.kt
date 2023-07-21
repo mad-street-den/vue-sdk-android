@@ -1,9 +1,9 @@
 package com.msd.vuesdk.utils.constants
 
-const val LOG_INFO_TAG_EVENT_TRACKING = "MSD Event Tracker"
-const val LOG_INFO_TAG_RECOMMENDATION = "MSD Recommendation"
-const val LOG_INFO_TAG_DISCOVER_EVENTS = "MSD Discover Events"
-const val LOG_INFO_TAG_GENERIC = "MSD SDK"
+const val LOG_INFO_TAG_EVENT_TRACKING = "VueSDK Event Tracker"
+const val LOG_INFO_TAG_RECOMMENDATION = "VueSDK Recommendation"
+const val LOG_INFO_TAG_DISCOVER_EVENTS = "VueSDK Discover Events"
+const val LOG_INFO_TAG_GENERIC = "VueSDK"
 const val MEDIUM_VALUE = "application"
 const val PLATFORM_VALUE = "android"
 const val PLATFORM_GENERIC_VALUE = "mobile"

@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 
-object MSDUtils {
+object VueSDKUtils {
 
     fun <T> T.serializeToMap(): Map<String, Any> {
         return convert()

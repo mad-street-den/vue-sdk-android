@@ -5,7 +5,7 @@ import android.webkit.URLUtil
 import com.msd.vuesdk.data.managers.RecommendationsStateManager
 import com.msd.vuesdk.data.model.RecommendationRequest
 import com.msd.vuesdk.helper.client.callbacks.RecommendationCallback
-import com.msd.vuesdk.utils.MSDUtils
+import com.msd.vuesdk.utils.VueSDKUtils
 import com.msd.vuesdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY
 import com.msd.vuesdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY_DESC
 import com.msd.vuesdk.utils.constants.INVALID_URL
@@ -103,7 +103,7 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         if (getUserID().isNotEmpty())
             jsonObject.put("user_id", getUserID())
         jsonObject.put(methodKey, methodValue)
-        return MSDUtils.eliminateNullFromJson(jsonObject)
+        return VueSDKUtils.eliminateNullFromJson(jsonObject)
     }
 
     override fun isValidationPassed(): Boolean {
