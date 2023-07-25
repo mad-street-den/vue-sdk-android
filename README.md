@@ -48,7 +48,7 @@ allprojects {
 3. Add the dependency
 ```kotlin
 dependencies {
-    implementation 'com.github.mad.street.den:vue.sdk.android:1.0.0'
+    implementation 'com.github.mad-street-den:vue-sdk-android:1.0.0'
 }
 ```
 
