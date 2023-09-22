@@ -5,6 +5,7 @@ import android.webkit.URLUtil
 import com.msd.vuesdk.data.managers.RecommendationsStateManager
 import com.msd.vuesdk.data.model.RecommendationRequest
 import com.msd.vuesdk.helper.client.callbacks.RecommendationCallback
+import com.msd.vuesdk.helper.client.config.VueSDKConfig
 import com.msd.vuesdk.utils.VueSDKUtils
 import com.msd.vuesdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY
 import com.msd.vuesdk.utils.constants.DATA_FOR_RECOMMENDATION_EMPTY_DESC
@@ -38,12 +39,12 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         properties: RecommendationRequest,
         callback: RecommendationCallback,
         methodKey: String,
-        methodValue: String, correlationId: String?
+        methodValue: String, correlationId: String?, sdkConfig: VueSDKConfig?
     ) {
         this.properties = properties
         if (isValidationPassed()) {
             CoroutineScope(Dispatchers.IO).launch {
-                injectedProperties = injectMandatoryData(methodKey, methodValue, properties)
+                injectedProperties = injectMandatoryData(methodKey, methodValue, properties,sdkConfig)
                 recommendationsStateManager?.getRecommendations(
                     injectedProperties!!,
                     token,
@@ -82,9 +83,18 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
     private fun injectMandatoryData(
         methodKey: String,
         methodValue: String?,
-        properties: RecommendationRequest
+        properties: RecommendationRequest,
+        sdkConfig: VueSDKConfig?
     ): JSONObject {
         val jsonObject = JSONObject()
+        sdkConfig?.let {userConfig ->
+
+            jsonObject.put("medium", userConfig.medium?:MEDIUM_VALUE)
+            jsonObject.put("platform", userConfig.platform?:PLATFORM_VALUE)
+            jsonObject.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
+            jsonObject.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
+
+        }
         jsonObject.put("blox_uuid", getMadUUID())
         jsonObject.put("catalogs", properties.catalogs)
         jsonObject.put("config", properties.config)
@@ -94,12 +104,9 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         jsonObject.put("min_bundles", properties.min_bundles)
         jsonObject.put("min_content", properties.min_content)
         jsonObject.put("page_num", properties.page_num)
-        jsonObject.put("referrer", PLATFORM_VALUE)
         jsonObject.put("skip_cache", properties.skip_cache)
         jsonObject.put("unbundle", properties.unbundle)
-        jsonObject.put("url", baseContext?.applicationContext?.packageName)
-        jsonObject.put("medium", MEDIUM_VALUE)
-        jsonObject.put("platform", PLATFORM_VALUE)
+
         if (getUserID().isNotEmpty())
             jsonObject.put("user_id", getUserID())
         jsonObject.put(methodKey, methodValue)
