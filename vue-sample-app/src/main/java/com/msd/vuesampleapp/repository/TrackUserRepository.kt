@@ -98,7 +98,7 @@ class TrackUserRepository() {
         }"""
             )
         msdClient?.track(
-            "PageView",
+            "pageView",
             properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
@@ -109,11 +109,11 @@ class TrackUserRepository() {
             "page_type": "pdp",
             "page_name": "PDP",
             "product_id": "5789256482843",
-            "clicked_product_id": "39946630725750"
+             "source_prodid": "s18naqdp743b"
         }"""
             )
         msdClient?.track(
-            "Add2cart",
+            "addToCart",
             properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }

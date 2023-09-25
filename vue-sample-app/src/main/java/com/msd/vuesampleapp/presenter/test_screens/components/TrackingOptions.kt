@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import com.msd.vuesampleapp.repository.SDKGenericRepository
 import com.msd.vuesampleapp.repository.TrackUserRepository
+import java.util.UUID
 
 @Composable
 fun TrackingOptions1() {
@@ -80,17 +81,14 @@ val context = LocalContext.current
                 Text(text = "Display new ID")
             }
 
-            Button(onClick = { sdkGenericRepository.setNewBloxUUID("DEV's Unique ID") }) {
+            Button(onClick = { sdkGenericRepository.setNewBloxUUID("DEV's Unique ID ${UUID.randomUUID().toString()}") }) {
                 Text(text = "Set a new Unique ID")
             }
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(onClick = { sdkGenericRepository.setNewBloxUUID("DEV's Unique ID") }) {
-                Text(text = "Set a new Unique ID")
-            }
 
-            Button(onClick = { trackUserRepository.leftSwipe() }) {
-                Text(text = "Track left swipe")
+            Button(onClick = { trackUserRepository.homePageView() }) {
+                Text(text = "Track view home page")
             }
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
