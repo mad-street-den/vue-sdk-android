@@ -191,7 +191,7 @@ vueSDKClient.getRecommendationsByStrategy(
 **Note:** The `correlationId` is an optional parameter that allows you to provide a unique correlation ID for the search request. It is important to ensure that the `correlationId` is unique across each page for both search and track API calls.
 
 
-The SDK automatically includes several properties when tracking events. These properties are essential for comprehensive event tracking and provide valuable insights into user interactions. Given below are the properties that are automatically added by the SDK. By explicitly providing the SDK config parameter for the getRecommendations function, the user can override each property's value.
+ Given below are the properties that are automatically added by the SDK. By explicitly providing the SDK config parameter for the getRecommendations function, the user can override each property's value.
 
 <!-- TABLE_GENERATE_START -->
 
