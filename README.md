@@ -93,26 +93,27 @@ To track custom events using our SDK, you can utilize the `track` function. This
 
 Here's an example of how to use the track function:
 ```kotlin
+val vueSDKConfig = VueSDKConfig(medium = "RANDOM_MEDIUM", referrer  = "RANDOM_REFERRER", url = "RANDOM_URL",platform="RANDOM_PLATFORM")
+
 vueSDKClient.track(
     eventName = "Event_Name",
     properties = <JSON_Object>,
-    correlationID = "UNIQUE_CORRELATION_ID"
+    correlationID = "UNIQUE_CORRELATION_ID",
+    sdkConfig = vueSDKConfig
 )
 ```
 **Note:** The `correlationId` is an optional parameter that allows you to provide a unique correlation ID for the event. It is important to ensure that the `correlationId` is unique across each page for both search and track API calls.
 
-The SDK automatically includes several properties when tracking events, eliminating the need for users to manually add them. These properties are essential for comprehensive event tracking and provide valuable insights into user interactions. Here are some of the properties that are automatically added by the SDK:
+The SDK automatically includes several properties when tracking events. These properties are essential for comprehensive event tracking and provide valuable insights into user interactions. Given below are the properties that are automatically added by the SDK. By explicitly providing the SDK config parameter for the track function, the user can override each property's value:
 
 
 <!-- TABLE_GENERATE_START -->
 
 | key         | Description                            | Example Value                        |
-| ----------- | -------------------------------------- | ------------------------------------ |
-| `blox_uuid` | Device UUID generated                  | 5fbeac07-f385-4145-a690-e98571ae985e |
-| `platform`  | Platform of the user                   | ios                                  |
+| ----------- | -------------------------------------- | ------------------------------------
+| `platform`  | Platform of the user                   | android                                  |
 | `medium`    | Medium from where requests are sent    | application                          |
-| `referrer`  | same values as platform for mobile app | ios                                  |
-| `user_id`   | user id passed while calling setUser   | 81bf1152-ce89-4954-b38e-f81875258f6e |
+| `referrer`  | same values as platform for mobile app | android                                 
 | `url`       | Bundle id of the application           | com.example.myapp                    |
 
 <!-- TABLE_GENERATE_END -->
@@ -123,12 +124,14 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 
 ### Get Recommendations by Page
 ```kotlin
+val vueSDKConfig = VueSDKConfig(medium = "RANDOM_MEDIUM", referrer  = "RANDOM_REFERRER", url = "RANDOM_URL",platform="RANDOM_PLATFORM")
+
  vueSDKClient.getRecommendationsByPage(
     pageReference = "YOUR_PAGE_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
     ),
-    correlationID = "UNIQUE_CORRELATION_ID",
+    correlationID = "UNIQUE_CORRELATION_ID", sdkConfig = vueSDKConfig,callback =
     object : RecommendationCallback {
         override fun onRecommendationsFetched(response: JSONArray) {
             // Action on recommendations fetched
@@ -144,12 +147,14 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 ### Get Recommendations by Module
 
 ```kotlin
+val vueSDKConfig = VueSDKConfig(medium = "RANDOM_MEDIUM", referrer  = "RANDOM_REFERRER", url = "RANDOM_URL",platform="RANDOM_PLATFORM")
+
  vueSDKClient.getRecommendationsByModule(
     moduleReference = "YOUR_MODULE_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
     ),
-    correlationID = "UNIQUE_CORRELATION_ID",
+    correlationID = "UNIQUE_CORRELATION_ID", sdkConfig = vueSDKConfig,callback =
     object : RecommendationCallback {
         override fun onRecommendationsFetched(response: JSONArray) {
             // Action on recommendations fetched
@@ -164,12 +169,14 @@ The getRecommendation functions in the SDK allows you to retrieve recommendation
 
 ### Get Recommendations by Strategy
 ```kotlin
+val vueSDKConfig = VueSDKConfig(medium = "RANDOM_MEDIUM", referrer  = "RANDOM_REFERRER", url = "RANDOM_URL",platform="RANDOM_PLATFORM")
+
 vueSDKClient.getRecommendationsByStrategy(
     strategyReference = "YOUR_STRATEGY_NAME",
     properties = RecommendationRequest(
         catalogs = <JSON_Object>
     ),
-    correlationID = "UNIQUE_CORRELATION_ID",
+    correlationID = "UNIQUE_CORRELATION_ID", sdkConfig = vueSDKConfig,callback =
     object : RecommendationCallback {
         override fun onRecommendationsFetched(response: JSONArray) {
             // Action on recommendations fetched
@@ -184,17 +191,15 @@ vueSDKClient.getRecommendationsByStrategy(
 **Note:** The `correlationId` is an optional parameter that allows you to provide a unique correlation ID for the search request. It is important to ensure that the `correlationId` is unique across each page for both search and track API calls.
 
 
-The SDK automatically includes several properties when tracking events, eliminating the need for users to manually add them. Here are some of the properties that are automatically added by the SDK:
+The SDK automatically includes several properties when tracking events. These properties are essential for comprehensive event tracking and provide valuable insights into user interactions. Given below are the properties that are automatically added by the SDK. By explicitly providing the SDK config parameter for the getRecommendations function, the user can override each property's value.
 
 <!-- TABLE_GENERATE_START -->
 
 | key         | Description                            | Example Value                        |
-| ----------- | -------------------------------------- | ------------------------------------ |
-| `blox_uuid` | Device UUID generated                  | 5fbeac07-f385-4145-a690-e98571ae985e |
-| `platform`  | Platform of the user                   | ios                                  |
+| ----------- | -------------------------------------- | ------------------------------------
+| `platform`  | Platform of the user                   | android                                  |
 | `medium`    | Medium from where requests are sent    | application                          |
-| `referrer`  | same values as platform for mobile app | ios                                  |
-| `user_id`   | user id passed while calling setUser   | 81bf1152-ce89-4954-b38e-f81875258f6e |
+| `referrer`  | same values as platform for mobile app | android                                 
 | `url`       | Bundle id of the application           | com.example.myapp                    |
 
 <!-- TABLE_GENERATE_END -->
@@ -224,6 +229,25 @@ To enable internal logging, pass `true` to the function `setLogging`:
 ```kotlin
 vueSDKClient.setLogging(loggingState = true)
 ```
+
+## Set BloxUUID
+
+The setBloxUUID function in the SDK allows you to set the blox UUID which is passed as argument for the getRecommendations and track functions. In the case where you do not set bloxUUID, the SDK internally generates a random UUID upon an SDK function call and will maintain the same value till setBloxUUID is called.
+
+```
+vueSDkClient.setBloxUUID(YOUR_UUID)
+```
+
+**Note:** The BloxUUID provided will be stored in App's cache and will be maintained throughout App's lifecycle.
+
+## Get BloxUUID
+
+The getBloxUUID function in the SDK returns the blox UUID configured in the SDK. 
+
+```
+vueSDkClient.getBloxUUID()
+```
+**Note:** In case if setBloxUUID or an SDK function is not called throughout an app's lifecycle the getBloxUUID function will return a null value.
 
 ## Complete Code Example
 Here's a runnable code example that covers everything in this quick start guide.
