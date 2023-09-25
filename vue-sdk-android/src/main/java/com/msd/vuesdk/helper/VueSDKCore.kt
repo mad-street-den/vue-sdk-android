@@ -6,6 +6,7 @@ import com.msd.vuesdk.data.model.RecommendationRequest
 import com.msd.vuesdk.helper.client.VueSDKClient
 import com.msd.vuesdk.helper.client.callbacks.DiscoverEventsCallback
 import com.msd.vuesdk.helper.client.callbacks.RecommendationCallback
+import com.msd.vuesdk.helper.client.config.VueSDKConfig
 import com.msd.vuesdk.presenter.DiscoverEventsPresenter
 import com.msd.vuesdk.presenter.EventPresenter
 import com.msd.vuesdk.presenter.RecommendationPresenter
@@ -21,6 +22,7 @@ internal class VueSDKCore(
     var token: String,
     var context: Context?,
     var baseURL: String,
+    bloxUUID:String? = null
 ) : VueSDKClient {
 
     private var eventPresenter: EventPresenter
@@ -47,31 +49,34 @@ internal class VueSDKCore(
         eventPresenter = EventPresenter(context, token, baseURL)
         recommendationPresenter = RecommendationPresenter(context, token, baseURL)
         discoverEventsPresenter = DiscoverEventsPresenter(context, token, baseURL)
+        bloxUUID?.let {
+            setBloxUUID(bloxUUID)
+        }
         fetchDiscoverEvents()
     }
 
-    override fun track(eventName: String, properties: JSONObject,correlationId:String?) {
+    override fun track(eventName: String, properties: JSONObject,correlationId:String?, sdkConfig: VueSDKConfig?) {
         if(!DiscoverEventUtils.getDiscoveryUtilInstance().fetchSuccess){
             fetchDiscoverEvents()
         }
         DataValidator.validateEventSanity(eventName, properties)
-        context?.let { eventPresenter.trackEvent(eventName, properties,correlationId) }
+        context?.let { eventPresenter.trackEvent(eventName, properties,correlationId,sdkConfig) }
     }
 
     override fun getRecommendationsByPage(
         pageReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback,correlationId:String?
+        callback: RecommendationCallback,correlationId:String?, sdkConfig: VueSDKConfig?
     ) {
-        getRecommendations(properties, callback, PAGE_REF, pageReference,correlationId)
+        getRecommendations(properties, callback, PAGE_REF, pageReference,correlationId,sdkConfig)
     }
 
     override fun getRecommendationsByStrategy(
         strategyReference: String,
         properties: RecommendationRequest,
-        callback: RecommendationCallback,correlationId:String?
+        callback: RecommendationCallback,correlationId:String?, sdkConfig: VueSDKConfig?
     ) {
-        getRecommendations(properties, callback, STRATEGY_REF, strategyReference,correlationId)
+        getRecommendations(properties, callback, STRATEGY_REF, strategyReference,correlationId,sdkConfig)
 
     }
 
@@ -79,9 +84,10 @@ internal class VueSDKCore(
         moduleReference: String,
         properties: RecommendationRequest,
         callback: RecommendationCallback,
-        correlationId: String?
+        correlationId: String?,
+        sdkConfig: VueSDKConfig?
     ) {
-        getRecommendations(properties, callback, MODULE_REF, moduleReference,correlationId)
+        getRecommendations(properties, callback, MODULE_REF, moduleReference,correlationId,sdkConfig)
     }
 
     override fun discoverEvents(callback: DiscoverEventsCallback) {
@@ -113,11 +119,37 @@ internal class VueSDKCore(
         SDKLogger.isLoggingEnabled = loggingState
     }
 
+    override fun getBloxUUID(): String? {
+        context?.let {
+           val bloxUUID =  PreferenceHelper.getSharedPreferenceString(it, PreferenceHelper.MAD_UUID)
+            if(bloxUUID.isBlank())
+                return null
+            else
+                return bloxUUID
+        }
+        return null
+    }
+
+    override fun setBloxUUID(bloxUUid: String) {
+        if (bloxUUid.isBlank())
+            SDKLogger.logSDKInfo(
+                LOG_INFO_TAG_GENERIC,
+                "ERROR: Code $MAD_UUID_EMPTY Message:$MAD_UUID_EMPTY_DESC"
+            )
+        else
+        {
+            context?.let {
+                PreferenceHelper.setSharedPreferenceString(it, PreferenceHelper.MAD_UUID, bloxUUid)
+            }
+        }
+
+    }
+
     private fun getRecommendations(
         properties: RecommendationRequest,
         callback: RecommendationCallback,
         methodKey: String,
-        methodValue: String,correlationId:String?
+        methodValue: String,correlationId:String?,sdkConfig: VueSDKConfig?
     ) {
         DataValidator.validateRecommendationSanity(properties)
         context?.let {
@@ -125,7 +157,7 @@ internal class VueSDKCore(
                 properties,
                 callback,
                 methodKey,
-                methodValue,correlationId
+                methodValue,correlationId,sdkConfig
             )
         }
     }

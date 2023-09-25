@@ -2,6 +2,7 @@ package com.msd.vuesdk.presenter
 
 import android.content.Context
 import com.msd.vuesdk.data.managers.EventStateManager
+import com.msd.vuesdk.helper.client.config.VueSDKConfig
 import com.msd.vuesdk.utils.DiscoverEventUtils
 import com.msd.vuesdk.utils.SDKLogger
 import com.msd.vuesdk.utils.constants.*
@@ -23,11 +24,16 @@ class EventPresenter(private var context: Context?, var token: String, baseURL: 
             eventStateManager = EventStateManager(baseURL)
     }
 
-    fun trackEvent(eventName: String, properties: JSONObject, correlationId: String?) {
+    fun trackEvent(
+        eventName: String,
+        properties: JSONObject,
+        correlationId: String?,
+        sdkConfig: VueSDKConfig?
+    ) {
         this.properties = properties
         if (isValidationPassed()) {
             CoroutineScope(Dispatchers.IO).launch {
-                injectedProperties = injectMandatoryData(eventName, properties)
+                injectedProperties = injectMandatoryData(eventName, properties,sdkConfig)
                 eventStateManager?.trackEvent(injectedProperties!!, token, correlationId)
                 eventStateManager?.eventState?.collect {
                     if (it?.eventResponse != null) {
@@ -46,15 +52,20 @@ class EventPresenter(private var context: Context?, var token: String, baseURL: 
     private fun injectMandatoryData(
         eventName: String,
         properties: JSONObject,
+        sdkConfig: VueSDKConfig?,
 
         ): JSONObject {
+        sdkConfig?.let {userConfig ->
+
+            properties.put("medium", userConfig.medium?:MEDIUM_VALUE)
+            properties.put("platform", userConfig.platform?:PLATFORM_VALUE)
+            properties.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
+            properties.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
+
+        }
         DiscoverEventUtils.getDiscoveryUtilInstance().discoverEventsLookup[eventName].let {
             properties.put(it?.get("event_name") ?: "event_name", eventName)
             properties.put(it?.get("blox_uuid") ?: "blox_uuid", getMadUUID())
-            properties.put(it?.get("medium") ?: "medium", MEDIUM_VALUE)
-            properties.put(it?.get("platform") ?: "platform", PLATFORM_VALUE)
-            properties.put(it?.get("referrer") ?: "referrer", PLATFORM_VALUE)
-            properties.put(it?.get("url") ?: "url", context?.applicationContext?.packageName)
             if (getUserID().isNotEmpty())
                 properties.put(it?.get("user_id") ?: "user_id", getUserID())
         }

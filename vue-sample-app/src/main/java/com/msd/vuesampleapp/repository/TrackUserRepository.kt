@@ -1,5 +1,6 @@
 package com.msd.vuesampleapp.repository
 
+import com.msd.vuesdk.helper.client.config.VueSDKConfig
 import org.json.JSONObject
 
 class TrackUserRepository() {
@@ -7,8 +8,8 @@ class TrackUserRepository() {
 
     fun pageView() {
         msdClient?.track(
-            "PageView",
-            properties = JSONObject("""{"page_type": "pdp", "page_name": "PDP", "product_id": "39596296700022"}"""),
+            "pageView",
+            properties = JSONObject("""{"page_type": "pdp", "page_name": "PDP", "product_id": "39596296700022"}"""),sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
 
@@ -19,7 +20,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "Buy",
-            properties,
+            properties, sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
 
@@ -36,7 +37,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "rightSwipe",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun moduleClick() {
@@ -55,7 +56,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "ModuleClick",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun placeOrder() {
@@ -69,7 +70,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "placeOrder",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun moduleView() {
@@ -85,7 +86,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "ModuleView",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun homePageView() {
@@ -97,8 +98,8 @@ class TrackUserRepository() {
         }"""
             )
         msdClient?.track(
-            "PageView",
-            properties,
+            "pageView",
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun addToCart() {
@@ -108,12 +109,12 @@ class TrackUserRepository() {
             "page_type": "pdp",
             "page_name": "PDP",
             "product_id": "5789256482843",
-            "clicked_product_id": "39946630725750"
+             "source_prodid": "s18naqdp743b"
         }"""
             )
         msdClient?.track(
-            "Add2cart",
-            properties,
+            "addToCart",
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun removeFromCart() {
@@ -128,7 +129,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "Removefromcart",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
     fun leftSwipe() {
@@ -144,7 +145,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "leftSwipe",
-            properties,
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
         )
     }
 }

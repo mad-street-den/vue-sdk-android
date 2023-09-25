@@ -20,16 +20,17 @@ class FetchRecommendationRepository {
         val recommendationInput = JSONObject(
             """{
             "$catalogId": {
-                "fields": [
-                    "title",
-                    "price",
-                    "image_link",
-                    "link"
-                ],
-                "context": {
-                    "variant_id": "39596296700022"
-                }
+            "fields": [
+                "Title",
+                "Variant Price",
+                "Image Src",
+                "Vendor",
+                "Handle"
+            ],
+            "context": {
+                "Handle": "wots9999"
             }
+        }
         }""".trimIndent()
         )
         return RecommendationRequest(catalogs = recommendationInput)
@@ -37,7 +38,7 @@ class FetchRecommendationRepository {
 
     fun getRecommendationsByPage() {
         msdClient?.getRecommendationsByPage("PDP",
-            getRecommendationInput("3089e3d3ba"),
+            getRecommendationInput("9e3fd2f248"),
             object : RecommendationCallback {
                 override fun onRecommendationsFetched(response: JSONArray) {
                     CoroutineScope(Dispatchers.IO).launch {
@@ -54,25 +55,26 @@ class FetchRecommendationRepository {
     fun getRecommendationsByPageNSearch() {
         val recommendationInput = JSONObject(
             """{
-             "3089e3d3ba": {
-                "fields": [
-                    "title",
-                    "price",
-                    "image_link",
-                    "link"
-                ],
-                "context": {
-                    "variant_id": "5789256482843"
-                },
-                "facets": [
-                    "product_type"
-                ],
-                "facet_limit": 100,
-                "search_query": "top",
-                "search_fields": [
-                    "title"
-                ]
-            }
+             "9e3fd2f248": {
+            "fields": [
+                "Title",
+                "Variant Price",
+                "Image Src",
+                "Vendor",
+                "Handle"
+            ],
+            "context": {
+                "Handle": "wots9999"
+            },
+            "facets": [
+                "Vendor"
+            ],
+            "facet_limit": 100,
+            "search_query": "top",
+            "search_fields": [
+                "Title"
+            ]
+        }
         }""".trimIndent()
         )
         val recommendationCatalogs = RecommendationRequest(catalogs = recommendationInput)
@@ -92,8 +94,8 @@ class FetchRecommendationRepository {
     }
 
     fun getRecommendationByModule() {
-        msdClient?.getRecommendationsByModule("Similar Products Module - 27 June",
-            getRecommendationInput("427e26dbfa"),
+        msdClient?.getRecommendationsByModule("SP Aug 1st",
+            getRecommendationInput("9e3fd2f248"),
             object : RecommendationCallback {
                 override fun onRecommendationsFetched(response: JSONArray) {
                     CoroutineScope(Dispatchers.IO).launch {
@@ -110,29 +112,29 @@ class FetchRecommendationRepository {
     fun getRecommendationByModuleNSearch() {
         val recommendationInput = JSONObject(
             """{
-             "3089e3d3ba": {
-                "fields": [
-                    "title",
-                    "price",
-                    "image_link",
-                    "link"
-                ],
-                "context": {
-                    "variant_id": "5789256482843"
-                },
-                "search_query": "top",
-                "search_fields": [
-                    "title"
-                ],
-                "facets": [
-                    "product_type",
-                    "gender"
-                ]
-            }
+             "9e3fd2f248": {
+            "fields": [
+                "Title",
+                "Variant Price",
+                "Image Src",
+                "Vendor",
+                "Handle"
+            ],
+            "context": {
+                "Handle": "wots9999"
+            },
+            "search_query": "top",
+            "search_fields": [
+                "title"
+            ],
+            "facets": [
+                "Vendor"
+            ]
+        }
         }""".trimIndent()
         )
         val recommendationCatalogs = RecommendationRequest(catalogs = recommendationInput)
-        msdClient?.getRecommendationsByModule("Search New",
+        msdClient?.getRecommendationsByModule("SP Aug 1st",
             recommendationCatalogs,
             object : RecommendationCallback {
                 override fun onRecommendationsFetched(response: JSONArray) {
@@ -148,8 +150,8 @@ class FetchRecommendationRepository {
     }
 
     fun getRecommendationByStrategy() {
-        msdClient?.getRecommendationsByStrategy("Similar Products - 27June",
-            getRecommendationInput("427e26dbfa"),
+        msdClient?.getRecommendationsByStrategy("SP Aug 1st",
+            getRecommendationInput("9e3fd2f248"),
             object : RecommendationCallback {
                 override fun onRecommendationsFetched(response: JSONArray) {
                     CoroutineScope(Dispatchers.IO).launch {
