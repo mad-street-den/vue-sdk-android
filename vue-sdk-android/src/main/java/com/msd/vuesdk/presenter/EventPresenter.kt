@@ -55,14 +55,24 @@ class EventPresenter(private var context: Context?, var token: String, baseURL: 
         sdkConfig: VueSDKConfig?,
 
         ): JSONObject {
-        sdkConfig?.let {userConfig ->
+        if(sdkConfig!=null){
+            sdkConfig.let {userConfig ->
 
-            properties.put("medium", userConfig.medium?:MEDIUM_VALUE)
-            properties.put("platform", userConfig.platform?:PLATFORM_VALUE)
-            properties.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
-            properties.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
+                properties.put("medium", userConfig.medium?:MEDIUM_VALUE)
+                properties.put("platform", userConfig.platform?:PLATFORM_VALUE)
+                properties.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
+                properties.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
+
+            }
 
         }
+        else{
+            properties.put("medium", MEDIUM_VALUE)
+            properties.put("platform", PLATFORM_VALUE)
+            properties.put("url", baseContext?.applicationContext?.packageName)
+            properties.put("referrer", PLATFORM_VALUE)
+        }
+
         DiscoverEventUtils.getDiscoveryUtilInstance().discoverEventsLookup[eventName].let {
             properties.put(it?.get("event_name") ?: "event_name", eventName)
             properties.put(it?.get("blox_uuid") ?: "blox_uuid", getMadUUID())

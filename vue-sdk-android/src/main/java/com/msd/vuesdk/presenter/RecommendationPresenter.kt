@@ -87,13 +87,22 @@ class RecommendationPresenter(context: Context?, var token: String, private var 
         sdkConfig: VueSDKConfig?
     ): JSONObject {
         val jsonObject = JSONObject()
-        sdkConfig?.let {userConfig ->
+        if(sdkConfig!=null){
+            sdkConfig.let {userConfig ->
 
-            jsonObject.put("medium", userConfig.medium?:MEDIUM_VALUE)
-            jsonObject.put("platform", userConfig.platform?:PLATFORM_VALUE)
-            jsonObject.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
-            jsonObject.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
+                jsonObject.put("medium", userConfig.medium?:MEDIUM_VALUE)
+                jsonObject.put("platform", userConfig.platform?:PLATFORM_VALUE)
+                jsonObject.put("url", userConfig.url?:baseContext?.applicationContext?.packageName)
+                jsonObject.put("referrer", userConfig.referrer?:PLATFORM_VALUE)
 
+            }
+
+        }
+        else{
+            jsonObject.put("medium", MEDIUM_VALUE)
+            jsonObject.put("platform", PLATFORM_VALUE)
+            jsonObject.put("url", baseContext?.applicationContext?.packageName)
+            jsonObject.put("referrer", PLATFORM_VALUE)
         }
         jsonObject.put("blox_uuid", getMadUUID())
         jsonObject.put("catalogs", properties.catalogs)
