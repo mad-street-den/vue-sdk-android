@@ -9,7 +9,7 @@ class TrackUserRepository() {
     fun pageView() {
         msdClient?.track(
             "pageView",
-            properties = JSONObject("""{"page_type": "pdp", "page_name": "PDP", "product_id": "39596296700022"}"""),sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
+            properties = JSONObject("""{"page_type": "pdp", "page_name": "PDP", "product_id": "39596296700022"}""")
         )
     }
 
@@ -99,7 +99,7 @@ class TrackUserRepository() {
             )
         msdClient?.track(
             "pageView",
-            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF", url = "UTL")
+            properties,sdkConfig = VueSDKConfig(medium = "MED", referrer  = "REF")
         )
     }
     fun addToCart() {
